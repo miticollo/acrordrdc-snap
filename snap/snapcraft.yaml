@@ -70,7 +70,7 @@ parts:
       craftctl default
       set -ex
       craftctl set version="$(grep "^readonly VERSION" pre-install | cut -d'=' -f2)"
-      mkdir -vp sommelier/hooks ; mv -v pre-install pre-start sommelier/hooks ; cp -v -R -p sommelier "$SNAPCRAFT_PART_INSTALL"
+      mkdir -vp sommelier/hooks ; mv -v pre-install pre-start post-install sommelier/hooks ; cp -v -R -p sommelier "$SNAPCRAFT_PART_INSTALL"
     stage:
       - sommelier
     build-packages:
