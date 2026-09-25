@@ -1,22 +1,29 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Publish a new version
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    # https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
+    inputs:
+      version:
+        # https://www.adobe.com/devnet-docs/acrobatetk/tools/AdminGuide/basics.html?highlight=extract%20msi%20...#product-version
+        # https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/#continuous-track-installers
+        description: 'Product version (e.g., major.minor.minor_minor)'
+        # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onworkflow_dispatchinputsinput_idrequired    
+        required: true
+        # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onworkflow_dispatchinputsinput_idtype
+        type: string
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
+    # Set a name for the job, which is displayed in the GitHub UI
+    name: build (${{ github.event.inputs.version }})
+    
     # The type of runner that the job will run on
     runs-on: ubuntu-24.04
 
@@ -24,6 +31,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v7
+
+      - name: Set version
+        env:
+          VERSION: "${{ github.event.inputs.version }}"
+        run: sed -i '/readonly VERSION=/c\readonly VERSION='"${VERSION//./}" ./snap/local/src/pre-install
 
       - name: Install snapcraft
         run: sudo snap install --classic snapcraft
@@ -33,9 +45,11 @@ jobs:
         env:
           SNAPCRAFT_BUILD_INFO: "1"
           SNAPCRAFT_IMAGE_INFO: '{"build_url":"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
-        run: sudo snapcraft --destructive-mode
+        run: |
+          # https://ubuntu.com/docs/snapcraft/latest/reference/build-environment-options/#destructive-mode
+          sudo snapcraft pack -v --destructive-mode
 
       - name: Upload snap
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
-        run: snapcraft upload --release=edge *.snap
+        uses: actions/upload-artifact@v7
+        with:
+          path: "*.snap"
