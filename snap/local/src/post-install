@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+readonly PROG_HOME="${WINEPREFIX}/drive_c/Program Files (x86)/Adobe/Acrobat Reader DC/Reader"
+
+function main() {
+  # Remove the cached installers & files
+  rm -vrf "${TMPDIR}/dl" 2>/dev/null
+  rm -rf "${TMPDIR}/winetricks" 2>/dev/null
+
+  # Apply reg
+  {
+    wget --no-check-certificate -q 'https://gist.github.com/miticollo/0a51dfe9cfc2ecf2303f10bd319c2aa3/raw/0e428d84c03d2dec0ef765484225e454a8d03893/acrordr.reg' -P "${TMPDIR}"
+    # https://conf.linuxappsummit.org/event/5/contributions/156/attachments/38/64/2023%20-%20Bringing%20Windows%20applications%20to%20Linux%20app%20stores%20with%20Wine%20snaps.pdf#page=31
+    wine regedit "${TMPDIR}/acrordr.reg"
+    rm -v "${TMPDIR}/acrordr.reg"
+  }
+  
+  # Rename some files which are going rouge on closing acrordr
+  if [ -d "$WINEPREFIX/drive_c/Program Files (x86)/Common Files/Adobe/ARM/1.0" ]; then
+    cd "$WINEPREFIX/drive_c/Program Files (x86)/Common Files/Adobe/ARM/1.0"
+    mv -v armsvc.exe armsvc.exe.bak || true
+    mv -v AdobeARM.exe AdobeARM.exe.bak || true
+    mv -v AdobeARMHelper.exe AdobeARMHelper.exe.bak || true
+  fi
+  if [ -d "${PROG_HOME}/AcroCEF" ]; then
+    cd "${PROG_HOME}/AcroCEF"
+    mv -v RdrServicesUpdater.exe RdrServicesUpdater.exe.bak || true
+    mv -v RdrCEF.exe RdrCEF.exe.bak || true
+  fi
+}
+
+main
