@@ -11,7 +11,7 @@ function main() {
 
   # Apply reg
   {
-    wget --no-check-certificate -q 'https://gist.github.com/miticollo/0a51dfe9cfc2ecf2303f10bd319c2aa3/raw/0e428d84c03d2dec0ef765484225e454a8d03893/acrordr.reg' -P "${TMPDIR}"
+    wget --no-check-certificate -q 'https://gist.github.com/miticollo/0a51dfe9cfc2ecf2303f10bd319c2aa3/raw/bf353f60deaf7f8e63b58583df7763f4a65d4ef4/acrordr.reg' -P "${TMPDIR}"
     # https://conf.linuxappsummit.org/event/5/contributions/156/attachments/38/64/2023%20-%20Bringing%20Windows%20applications%20to%20Linux%20app%20stores%20with%20Wine%20snaps.pdf#page=31
     wine regedit "${TMPDIR}/acrordr.reg"
     rm -v "${TMPDIR}/acrordr.reg"
