@@ -109,8 +109,6 @@ function main() {
   7z -y x "${TMPDIR}/${install_exe}" -o"${TMPDIR}/dl"
   rm -v "${TMPDIR}/${install_exe}" 2>/dev/null
   
-  # TODO(miticollo): Improve setup.ini
-  
   export INSTALL_EXE="${TMPDIR}/dl/setup.exe"
 }
 
