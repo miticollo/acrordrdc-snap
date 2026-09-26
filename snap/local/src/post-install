@@ -20,7 +20,6 @@ function main() {
   # Rename some files which are going rouge on closing acrordr
   if [ -d "$WINEPREFIX/drive_c/Program Files (x86)/Common Files/Adobe/ARM/1.0" ]; then
     cd "$WINEPREFIX/drive_c/Program Files (x86)/Common Files/Adobe/ARM/1.0"
-    mv -v armsvc.exe armsvc.exe.bak || true
     mv -v AdobeARM.exe AdobeARM.exe.bak || true
     mv -v AdobeARMHelper.exe AdobeARMHelper.exe.bak || true
   fi
