@@ -11,6 +11,7 @@ on:
       version:
         # https://www.adobe.com/devnet-docs/acrobatetk/tools/AdminGuide/basics.html?highlight=extract%20msi%20...#product-version
         # https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/#continuous-track-installers
+        # https://community.adobe.com/announcements-623/microsoft-edge-webview2-will-be-required-for-new-acrobat-and-reader-installations-on-windows-1645191#:~:text=What%20if%20your%20device%20is%20not%20compatible%20with%20WebView2?
         description: 'Product version (e.g., major.minor.minor_minor)'
         # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onworkflow_dispatchinputsinput_idrequired    
         required: true
